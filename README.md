@@ -14,3 +14,5 @@ serve-sqlite --path <path-to-your-sqlite-db-file>
 ```
 
 The last example will start a server that binds to ports automatically.  To specify ports, use the `--http` or `--https` options.
+
+Note: this tool is intended for personal and development use.  As of version 0.1.0 CORS is enabled by default to make this easier.  To disable cors, use the `--no-cors` option.  
