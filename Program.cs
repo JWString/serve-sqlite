@@ -9,6 +9,7 @@ using System.Reflection;
 
 var returnCode = 0;
 bool allowAddressVerify = true;
+bool useCors = true;
 
 try {
 
@@ -22,12 +23,16 @@ try {
         .Option<int?>("--http", "Port for binding to a local http address", CommandOptionType.SingleValue);
     var httpsInput = cli
         .Option<int?>("--https", "Port for binding to a local https address", CommandOptionType.SingleValue);
+    var noCors = cli
+        .Option<bool>("--no-cors", "Disable cross-origin resource sharing", CommandOptionType.NoValue);
     httpInput.DefaultValue = null;
     httpsInput.DefaultValue = null;
+    noCors.DefaultValue = false;
     cli.Execute(args);
     if (!dbPathInput.HasValue()) {
         return 0;
     }
+    useCors = !noCors.ParsedValue;
     #endregion
 
     #region INIT
@@ -35,7 +40,12 @@ try {
     {
         ContentRootPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location)?.FullName
     });
+
     builder.Services.AddHttpClient();
+    
+    if (useCors) {
+        builder.Services.AddCors();
+    } 
 
     if (!File.Exists(dbPathInput.ParsedValue)) {
         Console.WriteLine("Unable to locate database file at: " + dbPathInput.ParsedValue);
@@ -116,6 +126,16 @@ try {
     #endregion
 
     #region API
+
+    if (useCors) {
+        app.UseCors((builder) =>
+        {
+            builder.AllowAnyHeader();
+            builder.AllowAnyMethod();
+            builder.AllowAnyOrigin();
+        });
+    }
+
     app.MapPost("/addressverification", (
         HttpContext context
     ) => {
