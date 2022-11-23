@@ -5,7 +5,7 @@ This utility is available as a global .Net tool for .Net 6
 
 To install, run:
 ```
-dotnet tool install --global serve-sqlite
+dotnet tool install --global --version 0.1.0 serve-sqlite
 ```
 
 To start a local server using a sqlite data store:
