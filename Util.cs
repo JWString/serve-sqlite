@@ -19,7 +19,7 @@ internal static class Util
 
     public static async Task<string?> SanitizeTableNameAsync(this SqliteConnection connection, string table)
     {
-        var tables = await connection.QueryAsync<string>("SELECT tbl_name FROM sqlite_schema");
+        var tables = await connection.QueryAsync<string>("SELECT tbl_name FROM sqlite_schema WHERE type='table'");
         return tables
             .Where(tbl => tbl.ToLower() == table.ToLower())
             .SingleOrDefault();
