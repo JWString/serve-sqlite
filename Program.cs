@@ -15,6 +15,7 @@ try {
 
     #region CLI
     var cli = new CommandLineApplication<Program>();
+    cli.Name = "serve-sqlite";
     cli.HelpOption();
     var dbPathInput = cli
         .Option<string>("-p|--path", "Path to sqlite database file", CommandOptionType.SingleValue)
